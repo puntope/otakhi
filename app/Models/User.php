@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'intro',
+        'gender',
+        'nationality_id'
     ];
 
     /**
@@ -44,5 +47,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relación de un usuario a muchas habitaciones (rooms)
+     */
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+
+    /**
+     * Relación de un usuario con una nacionalidad
+     */
+    public function nationality()
+    {
+        return $this->belongsTo(Nationality::class);
+    }
+
+    /**
+     * Relación muchos a muchos con los idiomas.
+     */
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class, 'user_languages');
+    }
+
+    /**
+     * Conversaciones relacionadas con la habitación.
+     */
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
     }
 }
