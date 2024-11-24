@@ -14,7 +14,7 @@ class AddIntroGenderNationalityToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->text('intro')->nullable(); // Breve descripción del usuario
             $table->enum('gender', ['male', 'female']); // Género
-            $table->foreignId( 'nationality_id' )->constrained('nationalities')->cascadeOnDelete(); // Nacionalidad
+            $table->foreignId( 'nationality_id' )->default(1)->constrained('nationalities')->cascadeOnDelete(); // Nacionalidad
         });
     }
 
