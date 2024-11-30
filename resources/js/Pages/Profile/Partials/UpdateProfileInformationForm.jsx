@@ -2,7 +2,9 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Transition } from '@headlessui/react';
+import Textarea from '@/Components/TextArea';
+import Select from '@/Components/Select';
+import {Transition} from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 
 export default function UpdateProfileInformation({
@@ -16,6 +18,8 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
+            intro: user.intro,
+            gender: user.gender,
         });
 
     const submit = (e) => {
@@ -38,7 +42,7 @@ export default function UpdateProfileInformation({
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Name"/>
 
                     <TextInput
                         id="name"
@@ -50,11 +54,11 @@ export default function UpdateProfileInformation({
                         autoComplete="name"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.name}/>
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="Email"/>
 
                     <TextInput
                         id="email"
@@ -66,7 +70,7 @@ export default function UpdateProfileInformation({
                         autoComplete="username"
                     />
 
-                    <InputError className="mt-2" message={errors.email} />
+                    <InputError className="mt-2" message={errors.email}/>
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
@@ -91,6 +95,40 @@ export default function UpdateProfileInformation({
                         )}
                     </div>
                 )}
+
+                <div>
+
+                    <InputLabel htmlFor="gender" value="Gender"/>
+
+                    <Select
+                        name="gender"
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('gender', e.target.value)}
+                        value={ data.gender || '' }
+                        options={ [
+                            { value: '', label: 'Prefer not to say' },
+                            { value: 'male', label: 'Male' },
+                            { value: 'female', label: 'Female' }
+                        ] }
+                    />
+
+
+                    <InputError className="mt-2" message={errors.gender}/>
+                </div>
+
+                <div>
+
+                    <InputLabel htmlFor="intro" value="Tell other guests and landlords something about you" />
+                    <Textarea
+                        id="intro"
+                        className="mt-1 block w-full"
+                        value={data.intro || ''}
+                        onChange={(e) => setData('intro', e.target.value)}
+                    />
+
+
+                    <InputError className="mt-2" message={errors.intro}/>
+                </div>
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>

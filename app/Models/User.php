@@ -46,7 +46,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'gender' => 'string'
         ];
+    }
+
+    public function setAttribute($key, $value)
+    {
+        if ($key === 'gender' && $value === '') {
+            $value = null;
+        }
+        parent::setAttribute($key, $value);
     }
 
     /**
