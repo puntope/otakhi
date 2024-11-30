@@ -4,15 +4,28 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import Textarea from '@/Components/TextArea';
 import Select from '@/Components/Select';
-import {Transition} from '@headlessui/react';
+import {Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Transition} from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import {useState} from "react";
+
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
+    nationalities,
+    languages,
     className = '',
 }) {
     const user = usePage().props.auth.user;
+    const [query, setQuery] = useState('')
+
+    const filteredlanguages =
+        query === ''
+            ? languages
+            : languages.filter((language) => {
+                return language.name.toLowerCase().includes(query.toLowerCase())
+            })
+
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -20,6 +33,8 @@ export default function UpdateProfileInformation({
             email: user.email,
             intro: user.intro,
             gender: user.gender,
+            nationality_id: user.nationality_id,
+            languages: user.languages,
         });
 
     const submit = (e) => {
@@ -27,6 +42,8 @@ export default function UpdateProfileInformation({
 
         patch(route('profile.update'));
     };
+
+    console.log( user, languages );
 
     return (
         <section className={className}>
@@ -104,12 +121,12 @@ export default function UpdateProfileInformation({
                         name="gender"
                         className="mt-1 block w-full"
                         onChange={(e) => setData('gender', e.target.value)}
-                        value={ data.gender || '' }
-                        options={ [
-                            { value: '', label: 'Prefer not to say' },
-                            { value: 'male', label: 'Male' },
-                            { value: 'female', label: 'Female' }
-                        ] }
+                        value={data.gender || ''}
+                        options={[
+                            {value: '', label: 'Prefer not to say'},
+                            {value: 'male', label: 'Male'},
+                            {value: 'female', label: 'Female'}
+                        ]}
                     />
 
 
@@ -118,7 +135,72 @@ export default function UpdateProfileInformation({
 
                 <div>
 
-                    <InputLabel htmlFor="intro" value="Tell other guests and landlords something about you" />
+                    <InputLabel htmlFor="nationality_id" value="Nationality"/>
+
+                    <Select
+                        name="nationality_id"
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('nationality_id', e.target.value)}
+                        value={data.nationality_id || 1}
+                        options={nationalities.map(nationality => {
+                            return {value: nationality.id, label: nationality.name}
+                        })}
+                    />
+
+
+                    <InputError className="mt-2" message={errors.nationality_id}/>
+                </div>
+
+                <div>
+
+                    <InputLabel htmlFor="languages" value="Languages"/>
+
+
+                    <Combobox
+                        immediate
+                        multiple
+                        value={data.languages}
+                        onChange={(value) =>  setData('languages', value) } onClose={() => setQuery('')}>
+                        <ComboboxInput
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            aria-label="Query Languages" onChange={(event) => setQuery(event.target.value)} />
+                        <ComboboxOptions
+                            className="bg-white p-4 empty:invisible mt-1 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            anchor="bottom start"
+                        >
+                            {filteredlanguages.map((language) => {
+                                let className = "data-[focus]:bg-blue-100 p-2";
+                                if ( data.languages.includes( language ) ) {
+                                    className += ' bg-blue-200';
+                                }
+                                return (
+                                    <ComboboxOption key={language.id} value={language} className={className}>
+                                        {language.name}
+                                    </ComboboxOption>
+                                )
+                            } )}
+                        </ComboboxOptions>
+                    </Combobox>
+
+                    {languages.length > 0 && (
+                        <div className="my-1">
+                            {data.languages.map((language) => (
+                                <span
+                                    key={language.id}
+                                    className="mr-1 inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{language.name}</span>
+                    ))}
+                </div>
+                )}
+
+                    {
+                        errors?.languages?.map( langError => <InputError className="mt-2" message={ langError }/> )
+                    }
+
+            </div>
+
+            <div>
+
+                <InputLabel htmlFor="intro" value="Tell other guests and landlords something about you"/>
                     <Textarea
                         id="intro"
                         className="mt-1 block w-full"

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Language;
+use App\Models\Nationality;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +23,8 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'nationalities' => Nationality::all(),
+            'languages' => Language::all()
         ]);
     }
 
@@ -29,6 +33,17 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+
+
+        // Si el campo 'languages' está presente en la solicitud
+        if ($request->has('languages')) {
+
+            // Extraemos solo los IDs de los objetos 'languages'
+            $languageIds = collect($request->languages)->pluck('id');
+            // Sincronizamos la relación 'languages' con los IDs extraídos
+            $request->user()->languages()->sync($languageIds);
+        }
+
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {

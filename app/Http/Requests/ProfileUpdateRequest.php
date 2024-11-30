@@ -20,6 +20,7 @@ class ProfileUpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'intro' => [ 'string' ],
             'gender' => [ 'nullable', Rule::enum(GenderEnum::class) ],
+            'nationality_id' => ['required', 'exists:App\Models\Nationality,id' ],
             'email' => [
                 'required',
                 'string',
