@@ -25,12 +25,17 @@ class Room extends Model
         'deposit',
         'size',
         'has_utilities',
+        'has_guard',
+        'has_parking',
         'is_furnished',
         'allows_smoking',
         'allows_pets',
         'allowed_people',
         'availability_date',
         'min_contract_months',
+        'building_status',
+        'num_bathrooms',
+        'floor',
         'required_gender',
         'roommates_gender',
         'num_roommates',
@@ -48,12 +53,16 @@ class Room extends Model
         'deposit' => 'decimal:2',
         'size' => 'decimal:2',
         'has_utilities' => 'boolean',
+        'has_guard' => 'boolean',
+        'has_parking' => 'boolean',
         'is_furnished' => 'boolean',
         'allows_smoking' => 'boolean',
         'allows_pets' => 'boolean',
         'allowed_people' => 'integer',
         'min_contract_months' => 'integer',
         'num_roommates' => 'integer',
+        'num_bathrooms' => 'integer',
+        'floor' => 'integer',
         'availability_date' => 'date',
     ];
 
@@ -130,5 +139,25 @@ class Room extends Model
     public function conversations()
     {
         return $this->hasMany(Conversation::class);
+    }
+
+    /**
+     * Barrios relacionadas con la habitación.
+     */
+    public function neighbourhood()
+    {
+        return $this->belongsTo(Neighbourhood::class, 'neighbourhood_id');
+    }
+
+    /**
+     * Scope para obtener las habitaciones más recientes disponibles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('availability_date', '<=', now())
+            ->orderBy('availability_date', 'desc');
     }
 }

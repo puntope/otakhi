@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id' )->constrained(); // room owner
+            $table->foreignId('neighbourhood_id')->constrained(); // room neighbourhood
             $table->string('address'); // room address
             $table->decimal('latitude', 10, 8)->nullable(); // Latitud (10 dígitos, 8 decimales)
             $table->decimal('longitude', 11, 8)->nullable(); // Longitud (11 dígitos, 8 decimales)
@@ -21,7 +22,9 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->default(0)->unsigned(); // room price
             $table->decimal('deposit', 10, 2)->default(0)->unsigned(); // room deposit
             $table->decimal('size', 10, 2)->default(0)->unsigned(); // Room size in m2
+            $table->boolean('has_guard')->default( false );  // If utilities are paid by owner
             $table->boolean('has_utilities')->default( false );  // If utilities are paid by owner
+            $table->boolean('has_parking')->default( false );
             $table->boolean('is_furnished')->default( false ); // If is furnished
             $table->boolean('allows_smoking')->default( false ); // If smoking is allowed
             $table->boolean('allows_pets')->default( false );  // If pets are allowed
@@ -30,6 +33,9 @@ return new class extends Migration
             $table->integer('min_contract_months' )->default(0 )->unsigned(); // Minimum contract months ( 0 is indefinite )
             $table->enum('required_gender', [ 'male', 'female' ] )->nullable(); // Required gender for rent the room.
             $table->enum('roommates_gender', [ 'male', 'female'] )->nullable(); // Roommates gender.
+            $table->enum('building_status', [ 'new', 'old-renovated', 'old'] )->default( 'old' );
+            $table->integer('num_bathrooms' )->default( 1 )->unsigned();
+            $table->integer('floor' )->default( 1 )->unsigned();
             $table->integer('num_roommates')->default( 0 )->unsigned(); // Num of roommates.
             $table->timestamps();
             $table->index(['latitude', 'longitude']); // Índice combinado para búsquedas geográficas

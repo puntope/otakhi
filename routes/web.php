@@ -1,14 +1,20 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Room;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+
+    $latest = Room::available()->take(8)->get();
+    $latest = $latest->merge( Room::inRandomOrder()->take(8 - count( $latest ))->get() );
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register')
+        'canRegister' => Route::has('register'),
+        'latestRooms' => $latest
     ]);
 });
 
