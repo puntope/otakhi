@@ -19,7 +19,7 @@ export default function UpdateProfileInformation({
     const user = usePage().props.auth.user;
     const [query, setQuery] = useState('')
 
-    const filteredlanguages =
+    const filteredLanguages =
         query === ''
             ? languages
             : languages.filter((language) => {
@@ -43,7 +43,7 @@ export default function UpdateProfileInformation({
         patch(route('profile.update'));
     };
 
-    console.log( user, languages );
+    console.log( user, languages, filteredLanguages, data.languages );
 
     return (
         <section className={className}>
@@ -162,15 +162,16 @@ export default function UpdateProfileInformation({
                         value={data.languages}
                         onChange={(value) =>  setData('languages', value) } onClose={() => setQuery('')}>
                         <ComboboxInput
+                            placeholder="Type for finding a language"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            aria-label="Query Languages" onChange={(event) => setQuery(event.target.value)} />
+                            aria-label="Search Languages" onChange={(event) => setQuery(event.target.value)} />
                         <ComboboxOptions
                             className="bg-white p-4 empty:invisible mt-1 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                             anchor="bottom start"
                         >
-                            {filteredlanguages.map((language) => {
+                            {filteredLanguages.map((language) => {
                                 let className = "data-[focus]:bg-blue-100 p-2";
-                                if ( data.languages.includes( language ) ) {
+                                if ( data.languages.map( lang => lang.id ).includes( language.id ) ) {
                                     className += ' bg-blue-200';
                                 }
                                 return (
@@ -182,7 +183,7 @@ export default function UpdateProfileInformation({
                         </ComboboxOptions>
                     </Combobox>
 
-                    {languages.length > 0 && (
+                    {data.languages.length > 0 && (
                         <div className="my-1">
                             {data.languages.map((language) => (
                                 <span

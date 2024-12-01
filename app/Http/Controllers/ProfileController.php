@@ -39,7 +39,7 @@ class ProfileController extends Controller
         if ($request->has('languages')) {
 
             // Extraemos solo los IDs de los objetos 'languages'
-            $languageIds = collect($request->languages)->pluck('id');
+            $languageIds = collect($request['languages'])->pluck('id');
             // Sincronizamos la relación 'languages' con los IDs extraídos
             $request->user()->languages()->sync($languageIds);
         }
