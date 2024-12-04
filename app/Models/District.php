@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Neighbourhood extends Model
+class District extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,7 +13,7 @@ class Neighbourhood extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'district_id',
+        'city_id',
         'name'
     ];
 
@@ -24,13 +24,18 @@ class Neighbourhood extends Model
      */
     protected $casts = [];
 
-    public function district()
+    public function city()
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(City::class);
+    }
+
+    public function neighbourhoods()
+    {
+        return $this->hasMany(Neighbourhood::class);
     }
 
     public function rooms()
     {
-        return $this->hasMany(Room::class);
+        return $this->hasManyThrough(Room::class, Neighbourhood::class);
     }
 }

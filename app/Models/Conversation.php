@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Conversation extends Model
 {
-    use HasFactory;
 
     /**
      * Relación con la habitación.

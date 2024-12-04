@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\RoomFactory> */
     use HasFactory;
 
     /**
@@ -17,6 +17,7 @@ class Room extends Model
      */
     protected $fillable = [
         'user_id',
+        'neighbourhood_id',
         'address',
         'latitude',
         'longitude',
@@ -141,12 +142,24 @@ class Room extends Model
         return $this->hasMany(Conversation::class);
     }
 
-    /**
-     * Barrios relacionadas con la habitación.
-     */
     public function neighbourhood()
     {
-        return $this->belongsTo(Neighbourhood::class, 'neighbourhood_id');
+        return $this->belongsTo(Neighbourhood::class);
+    }
+
+    public function district()
+    {
+        return $this->hasOneThrough(District::class, Neighbourhood::class, 'id', 'id', 'neighbourhood_id', 'district_id');
+    }
+
+    public function city()
+    {
+        return $this->hasOneThrough(City::class, District::class, 'id', 'id', 'district_id', 'city_id');
+    }
+
+    public function country()
+    {
+        return $this->hasOneThrough(Country::class, City::class, 'id', 'id', 'city_id', 'country_id');
     }
 
     /**
