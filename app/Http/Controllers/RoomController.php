@@ -4,16 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
+use App\Models\District;
 use App\Models\Room;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function index( Request $request ) {
+
+        $filterDistricts = $request->query('districts') ? explode(',', $request->query('districts')) : [];
+
+
+        $roomQuery = Room::query();
+        if ( ! empty( $filterDistricts ) ) {
+            $roomQuery->whereHas('neighbourhood', function ($query) use ($filterDistricts) {
+                $query->whereIn('district_id', $filterDistricts);
+            });
+        }
+
+        $rooms = $roomQuery->get();
+
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'districts' => District::all(),
+            'rooms' => $rooms,
+            'filters' => [
+                'districts' => $request->query('districts'),
+            ]
+        ]);
+
     }
 
     /**

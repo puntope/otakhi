@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomController;
+use App\Models\District;
 use App\Models\Room;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,9 +15,14 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'filters' => [],
+        'districts' => District::all(),
         'latestRooms' => $latest
     ]);
 });
+
+Route::get('/rooms', [RoomController::class, 'index'])->name('rooms');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

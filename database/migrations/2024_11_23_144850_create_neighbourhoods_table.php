@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('district_id')->constrained();
             $table->string('name'); // Name of the neighbourhood
+            $table->string('slug')->unique(); // Name of the neighbourhood
         });
     }
 

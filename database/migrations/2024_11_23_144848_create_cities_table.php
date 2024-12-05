@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('country_id')->constrained();
             $table->string('name');
+            $table->string('slug')->unique();
         });
     }
 

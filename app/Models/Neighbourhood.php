@@ -14,7 +14,8 @@ class Neighbourhood extends Model
      */
     protected $fillable = [
         'district_id',
-        'name'
+        'name',
+        'slug'
     ];
 
     /**
