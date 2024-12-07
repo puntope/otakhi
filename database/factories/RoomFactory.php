@@ -18,6 +18,7 @@ class RoomFactory extends Factory
      */
     public function definition(): array
     {
+        $available = $this->faker->dateTimeBetween('now', '+1 month');
         return [
             'user_id' => User::inRandomOrder()->first()->id ?? 1,
             'neighbourhood_id' => Neighbourhood::inRandomOrder()->first()->id ?? 1,
@@ -25,8 +26,8 @@ class RoomFactory extends Factory
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
             'description' => $this->faker->paragraph,
-            'price' => $this->faker->randomFloat(2, 100, 1000),
-            'deposit' => $this->faker->randomFloat(2, 0, 500),
+            'price' => $this->faker->numberBetween(50, 1000),
+            'deposit' => $this->faker->numberBetween(0, 500),
             'size' => $this->faker->numberBetween(10, 50),
             'has_guard' => $this->faker->boolean,
             'has_parking' => $this->faker->boolean,
@@ -35,7 +36,8 @@ class RoomFactory extends Factory
             'allows_smoking' => $this->faker->boolean,
             'allows_pets' => $this->faker->boolean,
             'allowed_people' => $this->faker->numberBetween(1, 2),
-            'availability_date' => $this->faker->dateTimeBetween('now', '+1 month'),
+            'availability_from_date' => $available,
+            'availability_to_date' => $this->faker->randomElement( [ $this->faker->dateTimeBetween( $available, '+1 month'), null ]),
             'min_contract_months' => $this->faker->randomElement([0, 1, 3, 6, 12]),
             'required_gender' => $this->faker->randomElement(['male', 'female', null]),
             'roommates_gender' => $this->faker->randomElement(['male', 'female', null]),

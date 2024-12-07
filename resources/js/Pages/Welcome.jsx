@@ -1,71 +1,58 @@
 import { Head, router } from '@inertiajs/react';
 import Header from "@/Components/Header.jsx";
-import { useState} from "react";
-
-export default function Welcome({ districts, filters, ...props} ) {
-    const [activeFilters, setActiveFilters] = useState({
-        districts: filters?.districts ? filters.districts.split(',') : [],
-    });
+import SearchRooms from "@/Components/SearchRooms.jsx";
 
 
-    const handleFilterChange = ( filterKey, value ) => {
-        setActiveFilters((prev) => {
-            const updatedFilters = { ...prev };
 
-            let filter = updatedFilters[filterKey].slice()
-            if ( Array.isArray( filter ) ) {
-                if ( filter.includes(value) ) {
-                    filter = filter.filter((id) => id !== value);
-                } else {
-                    filter.push(value);
-                }
-            } else {
-                filter = value;
-            }
+export default function Welcome({ rooms, neighbourhoods, districts, filters, ...props} ) {
 
-            updatedFilters[filterKey] = filter;
+    console.log( rooms );
+    const formatDate = ( dateString ) => {
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        };
 
-            return updatedFilters;
-        });
-    };
+        return new Date( dateString ).toLocaleDateString( undefined, options );
+    }
 
-    const applyFilters = () => {
-
-        const query = {...activeFilters, districts: activeFilters.districts.join(',') };
-
-        Object.keys(query).forEach((key) => {
-            if (!query[key]) delete query[key];
-        });
-
-        console.log( query );
-        router.get( '/rooms', { ...query });
-    };
-
-    console.log( districts, props );
     return (
         <>
             <Head title="Otakhi.ge - Your room in Georgia" />
             <div className="bg-gray-50 text-black/50">
                 <Header />
                 <div
-                    className="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-                    <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
+                    className="relative flex flex-col selection:bg-teal-400 selection:text-white">
+                    <div>
                         <main>
-                            {districts?.map((district) => (
-                                <label key={district.id}>
-                                    <input
-                                        type="checkbox"
-                                        value={district.id}
-                                        checked={activeFilters.districts.includes(district.id.toString())}
-                                        onChange={() => { handleFilterChange( 'districts', district.id.toString() ) } }
-                                    />
-                                    {district.name}
-                                </label>
-                            ))}
-                            <button onClick={applyFilters}>Apply Filters</button>
+                            <div className="bg-teal-50 shadow-inner px-4 py-16 relative">
+                                <SearchRooms filters={ filters }  neighbourhoods={ neighbourhoods} districts={ districts} />
+                            </div>
+                            <div className="grid grid-cols-3 gap-5 gap-y-10 container mx-auto mt-20">
+                                { rooms.map( room => {
+                                    return <article key={room.id}>
+                                            <div className="overflow-hidden h-56 bg-gray-100 md:h-70 lg:h-80">
+                                                <img className="w-full h-full"
+                                                     src={room.images.find(image => image.is_main).image_path}
+                                                     alt={`Room in ${room.neighbourhood.name}, ${room.district.name}`}/>
+                                            </div>
+                                            <div className="mt-3">
+                                                <h3 className="bold text-xl text-black">Room
+                                                    in {room.neighbourhood.name}, {room.district.name}</h3>
+                                                <div>{room.size}m²
+                                                    - {room.is_furnished ? 'furnished' : 'unfurnished'}</div>
+                                                <div>Available from {formatDate(room.availability_from_date)}</div>
+                                                <div><strong
+                                                    className="bold text-xl text-black">{room.price}$</strong>/month {room.has_utilities && ' (incl. utilities)'}
+                                                </div>
+                                            </div>
+                                    </article>
+                                })}
+                            </div>
                         </main>
                         <footer className="py-16 text-center text-sm text-black">
-                            OTAKHI.GE ® { new Date().getFullYear() }
+                            OTAKHI.GE ® {new Date().getFullYear()}
                         </footer>
                     </div>
                 </div>

@@ -50,9 +50,9 @@ class Room extends Model
     protected $casts = [
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
-        'price' => 'decimal:2',
-        'deposit' => 'decimal:2',
-        'size' => 'decimal:2',
+        'price' => 'integer',
+        'deposit' => 'integer',
+        'size' => 'integer',
         'has_utilities' => 'boolean',
         'has_guard' => 'boolean',
         'has_parking' => 'boolean',

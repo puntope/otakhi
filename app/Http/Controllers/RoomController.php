@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Models\District;
+use App\Models\Neighbourhood;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,13 +19,18 @@ class RoomController extends Controller
     public function index( Request $request ) {
 
         $filterDistricts = $request->query('districts') ? explode(',', $request->query('districts')) : [];
+        $filterNeighbourhoods = $request->query('neighbourhoods') ? explode(',', $request->query('neighbourhoods')) : [];
 
 
-        $roomQuery = Room::query();
+        $roomQuery = Room::query()->with([ 'images', 'neighbourhood', 'district' ]);
         if ( ! empty( $filterDistricts ) ) {
             $roomQuery->whereHas('neighbourhood', function ($query) use ($filterDistricts) {
                 $query->whereIn('district_id', $filterDistricts);
             });
+        }
+
+        if ( ! empty( $filterNeighbourhoods ) ) {
+            $roomQuery->whereIn( 'neighbourhood_id', $filterNeighbourhoods );
         }
 
         $rooms = $roomQuery->get();
@@ -33,9 +39,12 @@ class RoomController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'districts' => District::all(),
+            'neighbourhoods' => Neighbourhood::all(),
+            'sizes' => Neighbourhood::all(),
             'rooms' => $rooms,
             'filters' => [
                 'districts' => $request->query('districts'),
+                'neighbourhoods' => $request->query('neighbourhoods'),
             ]
         ]);
 

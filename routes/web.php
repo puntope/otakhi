@@ -2,27 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
-use App\Models\District;
-use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-
-    $latest = Room::available()->take(8)->get();
-    $latest = $latest->merge( Room::inRandomOrder()->take(8 - count( $latest ))->get() );
-
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'filters' => [],
-        'districts' => District::all(),
-        'latestRooms' => $latest
-    ]);
-});
-
-Route::get('/rooms', [RoomController::class, 'index'])->name('rooms');
-
+Route::get('/', [RoomController::class, 'index'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

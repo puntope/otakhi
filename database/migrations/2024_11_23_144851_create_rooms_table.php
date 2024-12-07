@@ -19,9 +19,9 @@ return new class extends Migration
             $table->decimal('latitude', 10, 8)->nullable(); // Latitud (10 dígitos, 8 decimales)
             $table->decimal('longitude', 11, 8)->nullable(); // Longitud (11 dígitos, 8 decimales)
             $table->text('description')->nullable(); // room long description
-            $table->decimal('price', 10, 2)->default(0)->unsigned(); // room price
-            $table->decimal('deposit', 10, 2)->default(0)->unsigned(); // room deposit
-            $table->decimal('size', 10, 2)->default(0)->unsigned(); // Room size in m2
+            $table->integer('price')->default(0)->unsigned(); // room price
+            $table->integer('deposit')->default(0)->unsigned(); // room deposit
+            $table->integer('size')->default(0)->unsigned(); // Room size in m2
             $table->boolean('has_guard')->default( false );  // If utilities are paid by owner
             $table->boolean('has_utilities')->default( false );  // If utilities are paid by owner
             $table->boolean('has_parking')->default( false );
@@ -29,7 +29,8 @@ return new class extends Migration
             $table->boolean('allows_smoking')->default( false ); // If smoking is allowed
             $table->boolean('allows_pets')->default( false );  // If pets are allowed
             $table->integer('allowed_people')->default( 1 )->unsigned();  // Max number of people per room
-            $table->date('availability_date')->nullable(); // When is available for renting
+            $table->date('availability_from_date')->nullable(); // When is available for renting
+            $table->date('availability_to_date')->nullable(); // Until When is available for renting
             $table->integer('min_contract_months' )->default(0 )->unsigned(); // Minimum contract months ( 0 is indefinite )
             $table->enum('required_gender', [ 'male', 'female' ] )->nullable(); // Required gender for rent the room.
             $table->enum('roommates_gender', [ 'male', 'female'] )->nullable(); // Roommates gender.
