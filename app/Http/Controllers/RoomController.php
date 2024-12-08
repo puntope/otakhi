@@ -20,6 +20,8 @@ class RoomController extends Controller
 
         $filterDistricts = $request->query('districts') ? explode(',', $request->query('districts')) : [];
         $filterNeighbourhoods = $request->query('neighbourhoods') ? explode(',', $request->query('neighbourhoods')) : [];
+        $filterSize = $request->query('size');
+        $filterPrice = $request->query('price');
 
 
         $roomQuery = Room::query()->with([ 'images', 'neighbourhood', 'district' ]);
@@ -33,6 +35,14 @@ class RoomController extends Controller
             $roomQuery->whereIn( 'neighbourhood_id', $filterNeighbourhoods );
         }
 
+        if ( ! empty( $filterSize ) ) {
+            $roomQuery->where( 'size', '>=', (int) $filterSize );
+        }
+
+        if ( ! empty( $filterPrice ) ) {
+            $roomQuery->where( 'price', '<=', (int) $filterPrice );
+        }
+
         $rooms = $roomQuery->get();
 
         return Inertia::render('Welcome', [
@@ -40,11 +50,12 @@ class RoomController extends Controller
             'canRegister' => Route::has('register'),
             'districts' => District::all(),
             'neighbourhoods' => Neighbourhood::all(),
-            'sizes' => Neighbourhood::all(),
             'rooms' => $rooms,
             'filters' => [
                 'districts' => $request->query('districts'),
                 'neighbourhoods' => $request->query('neighbourhoods'),
+                'size' => $request->query('size'),
+                'price' => $request->query('price'),
             ]
         ]);
 

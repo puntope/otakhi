@@ -10,6 +10,8 @@ export default function SearchRooms( { filters, neighbourhoods, districts } ) {
     const [activeFilters, setActiveFilters] = useState({
         districts: filters?.districts ? filters.districts.split(',') : [],
         neighbourhoods: filters?.neighbourhoods ? filters.neighbourhoods.split(',') : [],
+        size: filters.size ?? '',
+        price: filters.price ?? '',
     });
     useOutsideClick( [ inputRef, dropdownRef ], () => { setShowLocations( false ) } );
 
@@ -39,7 +41,7 @@ export default function SearchRooms( { filters, neighbourhoods, districts } ) {
 
             const updatedFilters = { ...prev };
 
-            let filter = updatedFilters[filterKey].slice();
+            let filter = updatedFilters[filterKey];
 
             if ( Array.isArray( filter ) ) {
                 if ( filter.includes(value) ) {
@@ -103,10 +105,20 @@ export default function SearchRooms( { filters, neighbourhoods, districts } ) {
                     </div>
                 </div>
                 <div className="p-2 shrink flex items-center border-r border-r-gray-100">
-                    <input min="0" step="1" placeholder="Max. Price" type="number" className="text-lg form-input border-none focus:ring-0" /><span>$</span>
+                    <input
+                        value={ activeFilters['price']}
+                        onChange={ ( e ) => {
+                            handleFilterChange('price', e.target.value )
+                        }}
+                        min="0" step="1" placeholder="Max. Price" type="number" className="text-lg form-input border-none focus:ring-0" /><span>$</span>
                 </div>
                 <div className="p-2 shrink flex items-center border-r border-r-gray-100">
-                    <input min="0" step="1" placeholder="Min. Size" type="number"
+                    <input
+                        value={ activeFilters['size']}
+                        onChange={ ( e ) => {
+                            handleFilterChange('size', e.target.value )
+                        }}
+                        min="0" step="1" placeholder="Min. Size" type="number"
                            className="text-lg form-input border-none focus:ring-0"/><span>m²</span>
                 </div>
                 <div className="p-2 shrink">
