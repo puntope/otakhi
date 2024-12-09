@@ -18,30 +18,62 @@ class RoomController extends Controller
      */
     public function index( Request $request ) {
 
-        $filterDistricts = $request->query('districts') ? explode(',', $request->query('districts')) : [];
-        $filterNeighbourhoods = $request->query('neighbourhoods') ? explode(',', $request->query('neighbourhoods')) : [];
-        $filterSize = $request->query('size');
-        $filterPrice = $request->query('price');
+        $filters = (new Room())->getFillable();
+        $custom_filters = [ 'max_contract_months', 'min_floor', 'max_floor' ];
+        $filters = array_merge( $filters, $custom_filters );
+        $request_filters = [];
+        foreach ( $filters as $filter ) {
+            if ( $filter === 'districts' || $filter === 'neighbourhoods' ) {
+                $request_filters[$filter] = $request->query($filter) ? explode(',', $request->query( $filter ) ) : [];
+            } else {
+                $request_filters[$filter] = $request->query($filter);
+            }
+        }
 
 
         $roomQuery = Room::query()->with([ 'images', 'neighbourhood', 'district' ]);
-        if ( ! empty( $filterDistricts ) ) {
-            $roomQuery->whereHas('neighbourhood', function ($query) use ($filterDistricts) {
-                $query->whereIn('district_id', $filterDistricts);
+        if ( ! empty( $request_filters['districts'] ) ) {
+            $roomQuery->whereHas('neighbourhood', function ($query) use ( $request_filters ) {
+                $query->whereIn('district_id', $request_filters['districts'] );
             });
         }
 
-        if ( ! empty( $filterNeighbourhoods ) ) {
-            $roomQuery->whereIn( 'neighbourhood_id', $filterNeighbourhoods );
+        if ( ! empty( $request_filters['neighbourhoods'] ) ) {
+            $roomQuery->whereIn( 'neighbourhood_id', $request_filters['neighbourhoods'] );
         }
 
-        if ( ! empty( $filterSize ) ) {
-            $roomQuery->where( 'size', '>=', (int) $filterSize );
+        if ( isset(  $request_filters[ 'availability_from_date' ] ) ) {
+            $roomQuery
+                ->where('availability_from_date', '<=', $request_filters['availability_from_date'] );
         }
 
-        if ( ! empty( $filterPrice ) ) {
-            $roomQuery->where( 'price', '<=', (int) $filterPrice );
+        foreach ( ['price', 'deposit'] as $filter ) {
+            if ( isset( $request_filters[$filter] ) ) {
+                $roomQuery->where( $filter, '<=', (int) $request_filters[$filter] );
+            }
         }
+
+        // >=
+        foreach ( ['size', 'allowed_people', 'min_contract_months' ] as $filter ) {
+            if ( isset(  $request_filters[$filter] ) ) {
+                $roomQuery->where( $filter, '>=', (int) $request_filters[$filter] );
+            }
+        }
+
+        if ( isset(  $request_filters[ 'max_contract_months' ] ) ) {
+            $roomQuery->where('min_contract_months', '<=', (int) $request_filters[ 'max_contract_months' ] );
+        }
+
+        if ( isset( $request_filters[ 'min_floor' ] ) ) {
+            $roomQuery
+                ->where( 'floor', '>=', (int) $request_filters[ 'min_floor' ] );
+        }
+
+        if ( isset(  $request_filters[ 'max_floor' ] ) ) {
+            $roomQuery
+                ->where( 'floor', '<=', (int) $request_filters[ 'max_floor' ] );
+        }
+
 
         $rooms = $roomQuery->get();
 
@@ -51,12 +83,12 @@ class RoomController extends Controller
             'districts' => District::all(),
             'neighbourhoods' => Neighbourhood::all(),
             'rooms' => $rooms,
-            'filters' => [
-                'districts' => $request->query('districts'),
-                'neighbourhoods' => $request->query('neighbourhoods'),
-                'size' => $request->query('size'),
-                'price' => $request->query('price'),
-            ]
+            'filters' => array_merge(
+                $request_filters, [
+                    'districts' => $request->query('districts'),
+                    'neighbourhoods' => $request->query('neighbourhoods')
+                ]
+            )
         ]);
 
     }

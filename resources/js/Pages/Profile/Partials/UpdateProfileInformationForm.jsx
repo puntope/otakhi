@@ -98,7 +98,7 @@ export default function UpdateProfileInformation({
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
                             >
                                 Click here to re-send the verification email.
                             </Link>
@@ -163,10 +163,10 @@ export default function UpdateProfileInformation({
                         onChange={(value) =>  setData('languages', value) } onClose={() => setQuery('')}>
                         <ComboboxInput
                             placeholder="Type for finding a language"
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                             aria-label="Search Languages" onChange={(event) => setQuery(event.target.value)} />
                         <ComboboxOptions
-                            className="bg-white p-4 empty:invisible mt-1 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="bg-white p-4 empty:invisible mt-1 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                             anchor="bottom start"
                         >
                             {filteredLanguages.map((language) => {
