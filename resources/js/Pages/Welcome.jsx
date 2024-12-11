@@ -5,14 +5,15 @@ import Room from "@/Components/Room.jsx";
 import {useState} from "react";
 import FilterRoom from "@/Components/FilterRoom.jsx";
 import {getNeighbourhoods} from "@/utils.js";
+import Button from "@/Components/Button.jsx";
+import {Filter} from "lucide-react";
 
 
 
 export default function Welcome({ rooms, neighbourhoods, districts, filters, ...props} ) {
+    const [ filtersOpen, setFiltersOpen ] = useState( false );
 
-    console.log( rooms );
-
-    const [activeFilters, setActiveFilters] = useState({
+    const defaultFilters = {
         districts: filters?.districts ? filters.districts.split(',') : [],
         neighbourhoods: filters?.neighbourhoods ? filters.neighbourhoods.split(',') : [],
         size: filters.size ?? '',
@@ -35,8 +36,10 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
         roommates_gender_male: filters.roommates_gender_male,
         roommates_gender_female: filters.roommates_gender_female,
         gender_female: filters.gender_female,
-        gender_male: filters.gender_male,
-    });
+        gender_male: filters.gender_male
+    }
+
+    const [activeFilters, setActiveFilters] = useState( defaultFilters );
 
     const handleFilterChange = ( filterKey, value ) => {
         setActiveFilters((prev) => {
@@ -73,6 +76,8 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
     };
 
     const search = () => {
+        setFiltersOpen( false );
+
         const query = {
             ...activeFilters,
             districts: activeFilters.districts.join(','),
@@ -87,7 +92,7 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
     };
 
     return (
-        <>
+        <div className={"overflow-hidden " + ( filtersOpen && 'h-screen' ) }>
             <Head title="Otakhi.ge - Your room in Georgia" />
             <div className="bg-gray-50 text-black/50">
                 <Header />
@@ -97,23 +102,36 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
                         <main>
                             <div className="bg-teal-50 shadow-inner px-4 py-16 relative">
                                 <SearchRooms
-                                    filters={ activeFilters }
-                                    neighbourhoods={ neighbourhoods}
-                                    districts={ districts}
+                                    filters={activeFilters}
+                                    neighbourhoods={neighbourhoods}
+                                    districts={districts}
                                     onFilterChange={handleFilterChange}
-                                    onSearch={search} />
+                                    onSearch={search}/>
                             </div>
-                            <div className="grid grid-cols-3 gap-5 gap-y-10 container mx-auto mt-20">
-                                { rooms.map( room => <Room key={room.id} room={ room } />  )}
+                            <div className="container flex justify-between items-center mx-auto py-4">
+                                <p><strong>{rooms.length}</strong> rooms found</p>
+                                <Button type="simple" onClick={() => {
+                                    setFiltersOpen(open => !open)
+                                }}><Filter/>Filter</Button>
                             </div>
+                            <div className="grid grid-cols-3 gap-5 gap-y-10 container mx-auto mt-4">
+                                {rooms.map(room => <Room key={room.id} room={room}/>)}
+                            </div>
+                            { filtersOpen && <div
+                                onClick={ () => { setFiltersOpen( false) } }
+                                className="cursor-pointer fixed top-0 left-0 bg-black opacity-60 h-full w-full" /> }
+                            <FilterRoom onClear={() => {
+                                setActiveFilters(defaultFilters);
+                                setFiltersOpen(false);
+                            }} filters={activeFilters} isOpen={filtersOpen} onFilterChange={handleFilterChange}
+                                        onSearch={search}/>
                         </main>
-                        <FilterRoom filters={ activeFilters } onFilterChange={ handleFilterChange } onSearch={ search } />
                         <footer className="py-16 text-center text-sm text-black">
                             OTAKHI.GE ® {new Date().getFullYear()}
                         </footer>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

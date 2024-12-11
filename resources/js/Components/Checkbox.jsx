@@ -11,7 +11,7 @@ export default function Checkbox({ className = '', name = '', label = '', ...pro
                     className
                 }
             />
-            { label && <label htmlFor={name}>{label}</label> }
+            { label && <label className="text-sm font-medium text-gray-700"  htmlFor={name}>{label}</label> }
         </div>
 
     );
