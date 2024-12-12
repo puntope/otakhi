@@ -11,6 +11,8 @@ import {Filter} from "lucide-react";
 
 
 export default function Welcome({ rooms, neighbourhoods, districts, filters, ...props} ) {
+
+    console.log( rooms );
     const [ filtersOpen, setFiltersOpen ] = useState( false );
 
     const defaultFilters = {

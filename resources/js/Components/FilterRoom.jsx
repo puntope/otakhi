@@ -12,7 +12,7 @@ export default function FilterRoom( { isOpen = false, filters, onFilterChange, o
                 <div>
                     <FilterHeading>Availability</FilterHeading>
                     <InputLabel>
-                        Available from
+                        Available on
                         <TextInput value={filters['availability_from_date']} type="date" onChange={(e) => {
                             onFilterChange('availability_from_date', e.target.value)
                         }}/>
@@ -57,7 +57,12 @@ export default function FilterRoom( { isOpen = false, filters, onFilterChange, o
                         /> $
                     </div>
                 </InputLabel>
-                <Checkbox label="Incl. utilities" name="has_utilities"/>
+                <Checkbox
+                    label="Incl. utilities"
+                    name="has_utilities"
+                    checked={ filters.has_utilities }
+                    onChange={(e) => { onFilterChange('has_utilities', e.target.checked ) }}
+                />
 
                 <FilterHeading>Ideal tenant</FilterHeading>
                 <InputLabel>
@@ -73,11 +78,31 @@ export default function FilterRoom( { isOpen = false, filters, onFilterChange, o
                 </InputLabel>
                 <InputLabel>
                     Required gender
-                    <Checkbox label="Man" name="gender_man"/>
-                    <Checkbox label="Woman" name="gender_male"/>
+                    <Checkbox
+                        label="Man"
+                        name="gender_male"
+                        checked={ filters.gender_male }
+                        onChange={(e) => { onFilterChange('gender_male', e.target.checked ) }}
+                    />
+                    <Checkbox
+                        label="Woman"
+                        name="gender_female"
+                        checked={ filters.gender_female }
+                        onChange={(e) => { onFilterChange('gender_female', e.target.checked ) }}
+                    />
                 </InputLabel>
-                <Checkbox label="Smoking allowed" name="allows_smoking"/>
-                <Checkbox label="Pets allowed" name="allows_pets"/>
+                <Checkbox
+                    label="Smoking allowed"
+                    name="allows_smoking"
+                    checked={ filters.allows_smoking }
+                    onChange={(e) => { onFilterChange('allows_smoking', e.target.checked ) }}
+                />
+                <Checkbox
+                    label="Pets allowed"
+                    name="allows_pets"
+                    checked={ filters.allows_pets }
+                    onChange={(e) => { onFilterChange('allows_pets', e.target.checked ) }}
+                />
 
                 <FilterHeading>Building</FilterHeading>
                 <InputLabel>
@@ -104,26 +129,39 @@ export default function FilterRoom( { isOpen = false, filters, onFilterChange, o
                 </InputLabel>
                 <InputLabel>
                     Building type
-                    <Checkbox label="Old" name="building_type_old"
-                              checked={filters['building_type_old']}
-                              onChange={(e) => {
-                                  onFilterChange('building_type_old', e.target.value)
-                              }}
+                    <Checkbox
+                              label="Old" name="building_type_old"
+                              checked={ filters.building_type_old }
+                              onChange={(e) => { onFilterChange('building_type_old', e.target.checked ) }}
                     />
-                    <Checkbox label="New" name="bulding_type_new"/>
-                    <Checkbox label="Old Renovated" name="bulding_type_renovated"/>
+                    <Checkbox label="New" name="bulding_type_new"
+                              checked={ filters.bulding_type_new }
+                              onChange={(e) => { onFilterChange('bulding_type_new', e.target.checked ) }}
+                    />
+                    <Checkbox label="Old Renovated" name="bulding_type_renovated"
+                              checked={ filters.bulding_type_renovated }
+                              onChange={(e) => { onFilterChange('bulding_type_renovated', e.target.checked ) }}
+                    />
                 </InputLabel>
                 <InputLabel>
                     Bathrooms
                     <div>
-                        <TextInput type="number" step="1" min="0"/> baths
+                        <TextInput
+                            name="bathrooms"
+                            value={filters.bathrooms}
+                            onChange={(e) => {
+                                onFilterChange('bathrooms', e.target.value)
+                            }}
+                            type="number" step="1" min="0"/> baths
                     </div>
                 </InputLabel>
                 <InputLabel>
                     Furnished
                     <div>
-                        <Checkbox label="Furnished" name="is_furnished"/>
-                        <Checkbox label="Not Furnished" name="is_not_furnished"/>
+                        <Checkbox label="Furnished" name="is_furnished" checked={ filters.is_furnished }
+                                  onChange={(e) => { onFilterChange('is_furnished', e.target.checked ) }} />
+                        <Checkbox label="Not Furnished" name="is_not_furnished"  checked={ filters.is_not_furnished }
+                                  onChange={(e) => { onFilterChange('is_not_furnished', e.target.checked ) }} />
                     </div>
                 </InputLabel>
 
@@ -131,12 +169,20 @@ export default function FilterRoom( { isOpen = false, filters, onFilterChange, o
                 <InputLabel>
                     Number of Roommates
                     <div>
-                        <TextInput type="number" step="1" min="0"/> ppl
+                        <TextInput type="number" step="1" min="0"
+                                   name="num_roommates"
+                                   value={filters.num_roommates}
+                                   onChange={(e) => {
+                                       onFilterChange('num_roommates', e.target.value)
+                                   }} /> ppl
                     </div>
                 </InputLabel>
                 <InputLabel>
                     Roommates gender
-                    <Checkbox label="Men" name="roommates_gender_men"/>
+                    <Checkbox label="Men" name="roommates_gender_men" value={filters.roommates_gender_men}
+                              onChange={(e) => {
+                                  onFilterChange('roommates_gender_men', e.target.value)
+                              }} />
                     <Checkbox label="Women" name="roommates_gender_women"/>
                 </InputLabel>
             </div>

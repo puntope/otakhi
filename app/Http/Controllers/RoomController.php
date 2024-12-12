@@ -74,6 +74,13 @@ class RoomController extends Controller
                 ->where( 'floor', '<=', (int) $request_filters[ 'max_floor' ] );
         }
 
+        if ( isset(  $request_filters[ 'has_utilities' ] ) ) {
+            $roomQuery
+                ->where( 'has_utilities', '=', true );
+        }
+
+
+
 
         $rooms = $roomQuery->get();
 
