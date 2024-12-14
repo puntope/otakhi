@@ -79,9 +79,8 @@ class Room extends Model
     }
 
     // Room belongs to a user (owner)
-    public function facilities()
-    {
-        return $this->hasMany(Facility::class);
+    public function facilities() {
+        return $this->belongsToMany(Facility::class, 'room_facilities');
     }
 
     /**

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Models\District;
+use App\Models\Nationality;
 use App\Models\Neighbourhood;
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,7 +21,7 @@ class RoomController extends Controller
     public function index( Request $request ) {
 
         $filters = (new Room())->getFillable();
-        $custom_filters = [ 'max_contract_months', 'min_floor', 'max_floor' ];
+        $custom_filters = [ 'neighbourhoods','districts','max_contract_months', 'min_floor', 'max_floor' ];
         $filters = array_merge( $filters, $custom_filters );
         $request_filters = [];
         foreach ( $filters as $filter ) {
@@ -80,8 +82,6 @@ class RoomController extends Controller
         }
 
 
-
-
         $rooms = $roomQuery->get();
 
         return Inertia::render('Welcome', [
@@ -121,7 +121,11 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        //
+        return Inertia::render('Room', [
+            'room' => $room->load( 'images', 'landlord', 'neighbourhood', 'facilities' ),
+            'nationalities' => Nationality::all()->toArray(),
+            'created_at' => Carbon::parse( $room->created_at )->diffForHumans()
+        ]);
     }
 
     /**
