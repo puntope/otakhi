@@ -16,6 +16,7 @@ class StoreRoomRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'images.*' => 'min:1|image|mimes:jpeg,png,jpg,gif|max:1024',
             'neighbourhood_id' => 'required|exists:neighbourhoods,id',
             'address' => 'required|string|max:255',
             'latitude' => 'nullable|numeric|between:-90,90',

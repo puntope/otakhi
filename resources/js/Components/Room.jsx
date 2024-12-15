@@ -1,13 +1,13 @@
-import {formatDate} from "@/utils.js";
+import {formatDate, getImagePath } from "@/utils.js";
 import {Link} from "@inertiajs/react";
 
 export default function Room( { room } ) {
+
     return <article key={room.id}>
-        <div className="overflow-hidden h-56 bg-gray-100 md:h-70 lg:h-80">
-            <Link href={route('room.show', room)}>
-                <img className="w-full h-full hover:opacity-80"
-                 src={room.images.find(image => image.is_main).image_path}
-                               alt={`Room in ${room.neighbourhood.name}, ${room.district.name}`}/>
+        <div className="w-full h-0 pt-[60%] relative overflow-hidden inline-block">
+            <Link href={route('room.show', room)}> <img className="absolute h-full w-full inset-0 object-cover"
+                 src={ getImagePath(room) }
+                                                        alt={room.address}/>
             </Link>
         </div>
         <div className="mt-3">

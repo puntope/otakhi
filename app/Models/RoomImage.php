@@ -9,6 +9,15 @@ class RoomImage extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'room_id',
+        'image_path',
+        'is_main',
+    ];
+
+    public $timestamps = false;
+
+
     /**
      * Relación inversa con la habitación.
      */

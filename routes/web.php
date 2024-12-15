@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomImageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [RoomController::class, 'index'])->name('welcome');
@@ -14,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rooms', [RoomController::class, 'store'])->name('room.store');
     Route::patch('/rooms', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/rooms', [RoomController::class, 'destroy'])->name('room.destroy');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

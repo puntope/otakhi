@@ -8,7 +8,7 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
         <Page title="Profile" headingTitle="Profile">
             <div className="py-2">
                 <div className="container mx-auto">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 mb-5">
                         <UpdateProfileInformationForm
                             nationalities={nationalities}
                             languages={languages}
@@ -18,11 +18,11 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
                         />
                     </div>
 
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8  mb-5">
                         <UpdatePasswordForm className="max-w-xl" />
                     </div>
 
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8  mb-5">
                         <DeleteUserForm className="max-w-xl" />
                     </div>
                 </div>

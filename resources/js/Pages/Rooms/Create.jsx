@@ -18,6 +18,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
     const { data, setData, post, setError, errors, processing, recentlySuccessful } =
         useForm({
             user_id: user.id,
+            images: room.images,
             size: room.size || '',
             is_furnished: room.is_furnished || false,
             neighbourhood_id: room.neighbourhood_id || null,
@@ -62,7 +63,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
         <Page title="Publish a Room" headingTitle="Publish a Room">
             <form onSubmit={submit}>
                 <div className="container mx-auto">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 mb-5">
                         <section>
                             <header>
                                 <h2 className="text-lg font-medium text-gray-900">
@@ -98,11 +99,12 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="neighbourhood" value="Neighbourhood"/>
                                 <Combobox
                                     immediate
-                                    value={ data.neighbourhood_id  }
-                                    onChange={(value) => setData('neighbourhood_id', value ) } onClose={() => setQuery('')}>
+                                    value={data.neighbourhood_id}
+                                    onChange={(value) => setData('neighbourhood_id', value)}
+                                    onClose={() => setQuery('')}>
                                     <ComboboxInput
                                         placeholder="Type for finding a neighbourhood"
-                                        value={ query || getNeighbourhood( neighbourhoods, data.neighbourhood_id)?.name || '' }
+                                        value={query || getNeighbourhood(neighbourhoods, data.neighbourhood_id)?.name || ''}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                                         aria-label="Search neighbourhoods"
                                         onChange={(event) => setQuery(event.target.value)}/>
@@ -222,7 +224,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                         </section>
                     </div>
 
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 mb-5">
                         <section>
                             <header>
                                 <h2 className="text-lg font-medium text-gray-900">
@@ -265,9 +267,10 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <InputLabel>
                                     When it will be available?
-                                    <TextInput required value={data.availability_from_date} type="date" onChange={(e) => {
-                                        setData('availability_from_date', e.target.value)
-                                    }}/>
+                                    <TextInput required value={data.availability_from_date} type="date"
+                                               onChange={(e) => {
+                                                   setData('availability_from_date', e.target.value)
+                                               }}/>
 
                                     <InputError className="mt-2" message={errors.availability_from_date}/>
 
@@ -339,23 +342,49 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                         </section>
                     </div>
 
+                        <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 mb-5">
+                            <section>
+                                <header>
+                                    <h2 className="text-lg font-medium text-gray-900">
+                                        Images, facilities & description
+                                    </h2>
+                                    <p className="mt-1 text-sm text-gray-600">
+                                        Last details to make the room to look great!
+                                    </p>
+                                    <div className="mt-4">
+                                        <InputLabel htmlFor="images" value="Upload Images"/>
+                                        <input
+                                            type="file"
+                                            id="images"
+                                            name="images"
+                                            multiple
+                                            accept="image/*"
+                                            onChange={(e) => setData('images', e.target.files)}
+                                            className="mt-1 block w-full"
+                                        />
+                                        <InputError className="mt-2" message={errors.images}/>
+                                    </div>
+                                </header>
+                            </section>
+                        </div>
+
                     <div className="flex items-center gap-4">
                         <PrimaryButton disabled={processing}>Save</PrimaryButton>
 
                         <Transition
                             show={recentlySuccessful}
                             enter="transition ease-in-out"
-                            enterFrom="opacity-0"
-                            leave="transition ease-in-out"
-                            leaveTo="opacity-0"
-                        >
-                            <p className="text-sm text-gray-600">
-                                Saved.
-                            </p>
-                        </Transition>
+                                    enterFrom="opacity-0"
+                                    leave="transition ease-in-out"
+                                    leaveTo="opacity-0"
+                                >
+                                    <p className="text-sm text-gray-600">
+                                        Saved.
+                                    </p>
+                                </Transition>
+                            </div>
                     </div>
-                </div>
             </form>
         </Page>
-    );
+);
 }

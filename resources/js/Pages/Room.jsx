@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Button from "@/Components/Button.jsx";
 import KeyElement from "@/Components/KeyElement.jsx";
-import {formatDate} from "@/utils.js";
+import {formatDate, getImagePath} from "@/utils.js";
 import Page from "@/Layouts/Page.jsx";
 
 
@@ -20,6 +20,8 @@ const getFurnishedString = ( room ) => {
 }
 
 const getGender = ( gender ) => {
+    if (!gender) return 'Prefer not to say';
+
     return  String(gender).charAt(0).toUpperCase() + String(gender).slice(1)
 }
 
@@ -39,6 +41,9 @@ const getBuildingStatus = ( room ) => {
 }
 
 export default function Room( { room, created_at, nationalities } ) {
+
+    console.log( room );
+
     const getNationality = ( nationality ) => {
         return nationalities.find( nation => nation.id === nationality ).name;
     }
@@ -55,7 +60,7 @@ export default function Room( { room, created_at, nationalities } ) {
                     <div className="w-full">
                         <div className="w-full h-0 pt-[60%] relative overflow-hidden inline-block">
                             <img className="absolute h-full w-full inset-0 object-cover"
-                                 src={room.images.find(image => image.is_main).image_path} alt={room.address}/>
+                                 src={ getImagePath(room) } alt={room.address}/>
                         </div>
                         <div>
                             <h2 className="text-xl text-black font-bold my-4 mb-2">About the place</h2>
