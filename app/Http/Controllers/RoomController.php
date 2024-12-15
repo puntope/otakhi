@@ -103,9 +103,23 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
+    public function create() {
+        $neighbourhoods = Neighbourhood::all()->toArray();
+        $building_statuses =  array(
+            [ 'id' => 'old', 'name' => 'Old' ],
+            [ 'id' => 'new', 'name' => 'New' ],
+            [ 'id' => 'old-renovated', 'name' => 'Old Renovated' ]
+        );
+        $genders =  array(
+            [ 'id' => 'male', 'name' => 'Male' ],
+            [ 'id' => 'female', 'name' => 'Female' ],
+        );
+
+        return Inertia::render('Rooms/Create', [
+            'neighbourhoods' => $neighbourhoods,
+            'building_statuses' => $building_statuses,
+            'genders' => $genders
+        ]);
     }
 
     /**

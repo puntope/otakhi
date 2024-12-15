@@ -24,7 +24,8 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'nationalities' => Nationality::all(),
-            'languages' => Language::all()
+            'languages' => Language::all(),
+            'rooms' => $request->user()->rooms
         ]);
     }
 

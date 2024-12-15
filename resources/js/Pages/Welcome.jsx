@@ -7,6 +7,7 @@ import FilterRoom from "@/Components/FilterRoom.jsx";
 import {getNeighbourhoods} from "@/utils.js";
 import Button from "@/Components/Button.jsx";
 import {Filter} from "lucide-react";
+import Page from "@/Layouts/Page.jsx";
 
 
 
@@ -93,47 +94,39 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
         router.get( '/', { ...query });
     };
 
-    return (
-        <div className={"overflow-hidden " + ( filtersOpen && 'h-screen' ) }>
-            <Head title="Otakhi.ge - Your room in Georgia" />
-            <div className="bg-gray-50 text-black/50">
-                <Header />
-                <div
-                    className="relative flex flex-col selection:bg-teal-400 selection:text-white">
-                    <div>
-                        <main>
-                            <div className="bg-teal-50 shadow-inner px-4 py-16 relative">
-                                <SearchRooms
-                                    filters={activeFilters}
-                                    neighbourhoods={neighbourhoods}
-                                    districts={districts}
-                                    onFilterChange={handleFilterChange}
-                                    onSearch={search}/>
-                            </div>
-                            <div className="container flex justify-between items-center mx-auto py-4">
-                                <p><strong>{rooms.length}</strong> rooms found</p>
-                                <Button type="simple" onClick={() => {
-                                    setFiltersOpen(open => !open)
-                                }}><Filter/>Filter</Button>
-                            </div>
-                            <div className="grid grid-cols-3 gap-5 gap-y-10 container mx-auto mt-4">
-                                {rooms.map(room => <Room key={room.id} room={room}/>)}
-                            </div>
-                            { filtersOpen && <div
-                                onClick={ () => { setFiltersOpen( false) } }
-                                className="cursor-pointer fixed top-0 left-0 bg-black opacity-60 h-full w-full" /> }
-                            <FilterRoom onClear={() => {
-                                setActiveFilters(defaultFilters);
-                                setFiltersOpen(false);
-                            }} filters={activeFilters} isOpen={filtersOpen} onFilterChange={handleFilterChange}
-                                        onSearch={search}/>
-                        </main>
-                        <footer className="py-16 text-center text-sm text-black">
-                            OTAKHI.GE ® {new Date().getFullYear()}
-                        </footer>
+    return <Page title="Otakhi.ge - Your room in Georgia" locked={filtersOpen}>
+        <div className="relative flex flex-col selection:bg-teal-400 selection:text-white">
+            <div>
+                <main>
+                    <div className="bg-teal-50 shadow-inner px-4 py-16 relative">
+                        <SearchRooms
+                            filters={activeFilters}
+                            neighbourhoods={neighbourhoods}
+                            districts={districts}
+                            onFilterChange={handleFilterChange}
+                            onSearch={search}/>
                     </div>
-                </div>
+                    <div className="container flex justify-between items-center mx-auto py-4">
+                        <p><strong>{rooms.length}</strong> rooms found</p>
+                        <Button type="simple" onClick={() => {
+                            setFiltersOpen(open => !open)
+                        }}><Filter/>Filter</Button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-5 gap-y-10 container mx-auto mt-4">
+                        {rooms.map(room => <Room key={room.id} room={room}/>)}
+                    </div>
+                    {filtersOpen && <div
+                        onClick={() => {
+                            setFiltersOpen(false)
+                        }}
+                        className="cursor-pointer fixed top-0 left-0 bg-black opacity-60 h-full w-full"/>}
+                    <FilterRoom onClear={() => {
+                        setActiveFilters(defaultFilters);
+                        setFiltersOpen(false);
+                    }} filters={activeFilters} isOpen={filtersOpen} onFilterChange={handleFilterChange}
+                                onSearch={search}/>
+                </main>
             </div>
         </div>
-    );
+    </Page>
 }
