@@ -1,38 +1,44 @@
 import Page from "@/Layouts/Page.jsx";
-import {useForm} from "@inertiajs/react";
+import {useForm, usePage} from "@inertiajs/react";
 import {Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Transition} from "@headlessui/react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import InputLabel from "@/Components/InputLabel.jsx";
 import TextInput from "@/Components/TextInput.jsx";
 import Radio from "@/Components/Radio.jsx";
 import Checkbox from "@/Components/Checkbox.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import InputError from "@/Components/InputError.jsx";
+import {getNeighbourhood} from "@/utils.js";
 
 export default function Create({ room = {}, neighbourhoods, building_statuses, genders }) {
+    const user = usePage().props.auth.user;
+
     const [query, setQuery] = useState('')
 
-    const { data, setData, post, errors, processing, recentlySuccessful } =
+    const { data, setData, post, setError, errors, processing, recentlySuccessful } =
         useForm({
-            size: room.size,
-            is_furnished: room.is_furnished,
-            neighbourhood: room.neighbourhood || {},
-            address: room.address,
-            building_status: room.building_status,
-            floor: room.floor,
-            num_bathrooms: room.num_bathrooms,
-            num_roommates: room.num_roommates,
-            roommates_gender: room.roommates_gender,
-            price: room.price,
+            user_id: user.id,
+            size: room.size || '',
+            is_furnished: room.is_furnished || false,
+            neighbourhood_id: room.neighbourhood_id || null,
+            address: room.address || '',
+            building_status: room.building_status || 'old',
+            floor: room.floor || '',
+            num_bathrooms: room.num_bathrooms || '',
+            num_roommates: room.num_roommates || '',
+            roommates_gender: room.roommates_gender || '',
+            price: room.price || '',
             deposit: room.deposit || 0,
-            has_utilities: room.has_utilities,
-            availability_from_date: room.availability_from_date,
-            min_contract_months: room.min_contract_months,
-            required_gender: room.required_gender,
-            allowed_people: room.allowed_people,
-            allows_smoking: room.allows_smoking,
-            allows_pets: room.allows_pets
+            has_utilities: room.has_utilities || false,
+            availability_from_date: room.availability_from_date || '',
+            min_contract_months: room.min_contract_months || '',
+            required_gender: room.required_gender || '',
+            allowed_people: room.allowed_people || '',
+            allows_smoking: room.allows_smoking || false,
+            allows_pets: room.allows_pets || false
         });
+
+    console.log(data);
 
     const filteredNeighbourhoods =
         query === ''
@@ -44,6 +50,11 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
 
     const submit = (e) => {
         e.preventDefault();
+
+        if ( ! data.neighbourhood_id ) {
+            setError( 'neighbourhood_id', 'This field is required.' )
+        }
+
         post(route('room.store'));
     };
 
@@ -76,7 +87,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <Checkbox label="Is it Furnished?" name="is_furnished" checked={data.is_furnished}
                                           onChange={(e) => {
-                                              onFilterChange('is_furnished', e.target.checked)
+                                              setData('is_furnished', e.target.checked)
                                           }}/>
 
                                 <InputError className="mt-2" message={errors.is_furnished}/>
@@ -87,11 +98,11 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="neighbourhood" value="Neighbourhood"/>
                                 <Combobox
                                     immediate
-                                    value={data.neighbourhood}
-                                    onChange={(value) => setData('neighbourhood', value)} onClose={() => setQuery('')}>
+                                    value={ data.neighbourhood_id  }
+                                    onChange={(value) => setData('neighbourhood_id', value ) } onClose={() => setQuery('')}>
                                     <ComboboxInput
                                         placeholder="Type for finding a neighbourhood"
-                                        value={data.neighbourhood.name || ''}
+                                        value={ query || getNeighbourhood( neighbourhoods, data.neighbourhood_id)?.name || '' }
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                                         aria-label="Search neighbourhoods"
                                         onChange={(event) => setQuery(event.target.value)}/>
@@ -115,11 +126,11 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                             }
                                         ).map((neighbourhood) => {
                                             let className = "data-[focus]:bg-blue-100 p-2";
-                                            if (data.neighbourhood === neighbourhood.id) {
+                                            if (data.neighbourhood_id === neighbourhood.id) {
                                                 className += ' bg-blue-200';
                                             }
                                             return (
-                                                <ComboboxOption key={neighbourhood.id} value={neighbourhood}
+                                                <ComboboxOption key={neighbourhood.id} value={neighbourhood.id}
                                                                 className={className}>
                                                     {neighbourhood.name}
                                                 </ComboboxOption>
@@ -128,6 +139,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                     </ComboboxOptions>
                                 </Combobox>
                                 <InputError className="mt-2" message={errors.neighbourhood}/>
+                                <InputError className="mt-2" message={errors.neighbourhood_id}/>
 
                             </div>
                             <div className="mt-4">
@@ -148,9 +160,10 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
 
                                 {
                                     building_statuses.map(building_status => <Radio
+                                        key={building_status.id}
                                         onChange={(e) => setData('building_status', e.target.value)}
                                         name="building_status" label={building_status.name} value={building_status.id}
-                                        checked={(!data.building_status && building_status.id === 'old') || data.building_status === building_status.id}/>)
+                                        checked={data.building_status === building_status.id}/>)
                                 }
                                 <InputError className="mt-2" message={errors.building_status}/>
 
@@ -192,11 +205,13 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <InputLabel htmlFor="roommates_gender" value="Gender of the roommates"/>
                                 <Radio
+                                    key="any"
                                     onChange={(e) => setData('roommates_gender', e.target.value)}
                                     name="roommates_gender" label="Both" value=""
                                     checked={!data.roommates_gender}/>
                                 {
                                     genders.map(gender => <Radio
+                                        key={gender.id}
                                         onChange={(e) => setData('roommates_gender', e.target.value)}
                                         name="roommates_gender" label={gender.name} value={gender.id}
                                         checked={data.roommates_gender === gender.id}/>)
@@ -231,7 +246,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <Checkbox label="Has the utilities included?" name="has_utilities"
                                           checked={data.has_utilities}
                                           onChange={(e) => {
-                                              onFilterChange('has_utilities', e.target.checked)
+                                              setData('has_utilities', e.target.checked)
                                           }}/>
 
                                 <InputError className="mt-2" message={errors.has_utilities}/>
@@ -287,11 +302,13 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <InputLabel htmlFor="required_gender" value="Which gender the tenant should be?"/>
                                 <Radio
+                                    key="any"
                                     onChange={(e) => setData('required_gender', e.target.value)}
                                     name="required_gender" label="Not important" value=""
                                     checked={!data.required_gender}/>
                                 {
                                     genders.map(gender => <Radio
+                                        key={gender.id}
                                         onChange={(e) => setData('required_gender', e.target.value)}
                                         name="required_gender" label={gender.name} value={gender.id}
                                         checked={data.required_gender === gender.id}/>)
@@ -304,7 +321,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <Checkbox label="Is smoking allowed?" name="allows_smoking"
                                           checked={data.allows_smoking}
                                           onChange={(e) => {
-                                              onFilterChange('allows_smoking', e.target.checked)
+                                              setData('allows_smoking', e.target.checked)
                                           }}/>
 
                                 <InputError className="mt-2" message={errors.allows_smoking}/>
@@ -313,7 +330,7 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <Checkbox label="Are pets allowed?" name="allows_pets" checked={data.allows_pets}
                                           onChange={(e) => {
-                                              onFilterChange('allows_pets', e.target.checked)
+                                              setData('allows_pets', e.target.checked)
                                           }}/>
 
                                 <InputError className="mt-2" message={errors.allows_pets}/>

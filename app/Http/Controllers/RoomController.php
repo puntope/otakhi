@@ -10,6 +10,7 @@ use App\Models\Neighbourhood;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -127,7 +128,10 @@ class RoomController extends Controller
      */
     public function store(StoreRoomRequest $request)
     {
-        //
+        $room = new Room();
+        $room->fill($request->validated());
+        $room->save();
+        return redirect()->route('room.show', [ 'room' => $room ]);
     }
 
     /**

@@ -2,7 +2,7 @@ import {Head} from "@inertiajs/react";
 import Header from "@/Components/Header.jsx";
 
 export default function Page( { children, headingTitle, title, locked = false } ) {
-    return <div className={ ( locked === true && 'h-screen overflow-hidden')}>
+    return <div className={ '' + ( locked === true && 'h-screen overflow-hidden')}>
         <Head title={title}/>
         <div className="bg-gray-50 text-black/50">
             <Header/>
