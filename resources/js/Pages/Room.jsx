@@ -42,7 +42,6 @@ const getBuildingStatus = ( room ) => {
 
 export default function Room( { room, created_at, nationalities } ) {
 
-    console.log( room );
 
     const getNationality = ( nationality ) => {
         return nationalities.find( nation => nation.id === nationality ).name;

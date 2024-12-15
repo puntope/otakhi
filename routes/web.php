@@ -11,7 +11,7 @@ Route::get('/room/{room}', [RoomController::class, 'show'])->name('room.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/rooms/new', [RoomController::class, 'create'])->name('room.create');
-    Route::get('/rooms', [RoomController::class, 'edit'])->name('room.edit');
+    Route::get('/rooms/{room}', [RoomController::class, 'edit'])->name('room.edit');
     Route::post('/rooms', [RoomController::class, 'store'])->name('room.store');
     Route::patch('/rooms', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/rooms', [RoomController::class, 'destroy'])->name('room.destroy');

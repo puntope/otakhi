@@ -39,7 +39,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
             allows_pets: room.allows_pets || false
         });
 
-    console.log(data);
 
     const filteredNeighbourhoods =
         query === ''

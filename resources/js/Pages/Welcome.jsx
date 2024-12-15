@@ -13,7 +13,6 @@ import Page from "@/Layouts/Page.jsx";
 
 export default function Welcome({ rooms, neighbourhoods, districts, filters, ...props} ) {
 
-    console.log( rooms );
     const [ filtersOpen, setFiltersOpen ] = useState( false );
 
     const defaultFilters = {

@@ -2,8 +2,12 @@ import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import Page from "@/Layouts/Page.jsx";
+import {Link} from "@inertiajs/react";
+import {getImagePath} from "@/utils.js";
 
-export default function Edit({ mustVerifyEmail, status, nationalities, languages }) {
+export default function Edit({ mustVerifyEmail, status, nationalities, languages, rooms }) {
+
+    console.log(rooms)
     return (
         <Page title="Profile" headingTitle="Profile">
             <div className="py-2">
@@ -18,12 +22,28 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
                         />
                     </div>
 
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8  mb-5">
-                        <UpdatePasswordForm className="max-w-xl" />
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 mb-5">
+                        <div className="flex flex-col gap-4">
+                            { rooms.map( room =>  <Link href={route('room.edit', room)}><div className="flex w-full items-center gap-3">
+                                <div className="w-6 h-0 pt-6 relative overflow-hidden inline-block">
+                                   <img
+                                        className="absolute h-full w-full inset-0 object-cover"
+                                        src={getImagePath(room)}
+                                        alt={room.address}/>
+                                </div>
+                                <strong className="bold text-black hover:opacity-50">Room in {room.neighbourhood.name}, {room.district.name}</strong>
+                                </div></Link>
+                            )}
+                        </div>
+
                     </div>
 
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8  mb-5">
-                        <DeleteUserForm className="max-w-xl" />
+                        <UpdatePasswordForm className="max-w-xl"/>
+                    </div>
+
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8  mb-5">
+                        <DeleteUserForm className="max-w-xl"/>
                     </div>
                 </div>
             </div>

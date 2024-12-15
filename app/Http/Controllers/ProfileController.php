@@ -26,7 +26,7 @@ class ProfileController extends Controller
             'status' => session('status'),
             'nationalities' => Nationality::all(),
             'languages' => Language::all(),
-            'rooms' => $request->user()->rooms
+            'rooms' => $request->user()->rooms()->with('images', 'neighbourhood', 'district' )->get()
         ]);
     }
 

@@ -43,7 +43,6 @@ export default function UpdateProfileInformation({
         patch(route('profile.update'));
     };
 
-    console.log( user, languages, filteredLanguages, data.languages );
 
     return (
         <section className={className}>
