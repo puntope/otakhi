@@ -73,7 +73,7 @@ export default function SearchRooms( { filters, neighbourhoods, districts, onSea
         {
             <div
                 ref={ dropdownRef }
-                className={ "absolute left-1/2 -translate-x-1/2 shadow-md bg-white p-4 rounded grid grid-flow-col auto-cols-auto gap-4 container mx-auto " + ( showLocations ? 'show' : 'hidden' ) } >
+                className={ "absolute left-1/2 -translate-x-1/2 shadow-md bg-white p-4 rounded grid grid-flow-col auto-cols-auto gap-4 z-10 container  mx-auto " + ( showLocations ? 'show' : 'hidden' ) } >
                 {districts.map(district => {
                     const districtNeighbourhoods = getNeighbourhoods( neighbourhoods, district.id );
 
