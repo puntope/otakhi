@@ -117,9 +117,6 @@ export default function Room( { room, created_at, nationalities } ) {
 
                         </div>
                         <div>
-                            <h2 className="text-xl text-black font-bold my-4 mb-2">Where will you live</h2>
-                        </div>
-                        <div>
                             <h2 className="text-xl text-black font-bold my-4 mb-2">Ideal tenant</h2>
                             <div className="bg-gray-200 p-5 rounded">
                                 <div className="flex justify-between items-center text-black mb-2">

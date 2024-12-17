@@ -2,8 +2,9 @@ import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import Page from "@/Layouts/Page.jsx";
-import {Link} from "@inertiajs/react";
+import {Link, router} from "@inertiajs/react";
 import {getImagePath} from "@/utils.js";
+import Button from "@/Components/Button.jsx";
 
 export default function Edit({ mustVerifyEmail, status, nationalities, languages, rooms }) {
 
@@ -34,6 +35,13 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
                                 <strong className="bold text-black hover:opacity-50">Room in {room.neighbourhood.name}, {room.district.name}</strong>
                                 </div></Link>
                             )}
+
+                            { rooms.length <= 0 && <div className="text-center">
+                                <p>No rooms found.</p>
+                                <div className="mt-6 flex items-center justify-center">
+                                    <Button onClick={ () => { router.get( '/rooms/new' )} }>Create your first room for free!</Button>
+                                </div>
+                            </div>}
                         </div>
 
                     </div>

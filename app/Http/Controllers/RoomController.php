@@ -10,7 +10,6 @@ use App\Models\Neighbourhood;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -166,7 +165,23 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
-        //
+        $neighbourhoods = Neighbourhood::all()->toArray();
+        $building_statuses =  array(
+            [ 'id' => 'old', 'name' => 'Old' ],
+            [ 'id' => 'new', 'name' => 'New' ],
+            [ 'id' => 'old-renovated', 'name' => 'Old Renovated' ]
+        );
+        $genders =  array(
+            [ 'id' => 'male', 'name' => 'Male' ],
+            [ 'id' => 'female', 'name' => 'Female' ],
+        );
+
+        return Inertia::render('Rooms/Create', [
+            'neighbourhoods' => $neighbourhoods,
+            'building_statuses' => $building_statuses,
+            'genders' => $genders,
+            'room' => $room
+        ]);
     }
 
     /**
