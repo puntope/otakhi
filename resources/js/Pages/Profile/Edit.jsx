@@ -7,8 +7,6 @@ import {getImagePath} from "@/utils.js";
 import Button from "@/Components/Button.jsx";
 
 export default function Edit({ mustVerifyEmail, status, nationalities, languages, rooms }) {
-
-    console.log(rooms)
     return (
         <Page title="Profile" headingTitle="Profile">
             <div className="py-2">

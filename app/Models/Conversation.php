@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Conversation extends Model
 {
 
+    protected $fillable = [
+        'user_id',
+        'room_id'
+    ];
+
     /**
      * Relación con la habitación.
      */

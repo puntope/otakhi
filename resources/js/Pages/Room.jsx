@@ -11,43 +11,19 @@ import {
 } from "lucide-react";
 import Button from "@/Components/Button.jsx";
 import KeyElement from "@/Components/KeyElement.jsx";
-import {formatDate, getImagePath} from "@/utils.js";
+import {formatDate, getBuildingStatus, getFurnishedString, getGender, getImagePath, getUtilities} from "@/utils.js";
 import Page from "@/Layouts/Page.jsx";
+import {router} from "@inertiajs/react";
 
 
-const getFurnishedString = ( room ) => {
-    return  room.is_furnished ? 'Furnished' : 'Unfurnished';
-}
-
-const getGender = ( gender ) => {
-    if (!gender) return 'Prefer not to say';
-
-    return  String(gender).charAt(0).toUpperCase() + String(gender).slice(1)
-}
-
-const getUtilities = ( room ) => {
-    return room.has_utilities ? 'Incl. utilities' : 'Excl. utilities'
-}
-
-const getBuildingStatus = ( room ) => {
-     switch ( room.building_status ) {
-         case 'old':
-             return 'Old';
-         case 'old-renovated':
-             return 'Renovated';
-         default:
-             return 'New';
-     }
-}
 
 export default function Room( { room, created_at, nationalities } ) {
-
 
     const getNationality = ( nationality ) => {
         return nationalities.find( nation => nation.id === nationality ).name;
     }
 
-    return <Page title={`Room in ${room.address} - Otakhi.ge - Your room in Georgia `}>
+    return <Page title={`Room in ${room.address}`}>
         <article className="container mx-auto">
             <div className="py-10">
                 <h1 className="text-2xl text-black font-bold mb-2">{room.address}</h1>
@@ -155,7 +131,7 @@ export default function Room( { room, created_at, nationalities } ) {
                                 <p className="mb-5">
                                     {room.landlord.intro}
                                 </p>
-                                <Button>Contact Landlord</Button>
+                                <Button onClick={ () => { router.get( `/conversations/${room.id}/new` )} }>Contact Landlord</Button>
                             </div>
                         </div>
                     </div>
@@ -193,7 +169,7 @@ export default function Room( { room, created_at, nationalities } ) {
                             <UserRound/>
                             <strong>{room.landlord.name}</strong>
                         </div>
-                        <Button>Contact Landlord</Button>
+                        <Button onClick={ () => { router.get( `/conversations/${room.id}/new` )} }>Contact Landlord</Button>
                     </div>
                 </div>
             </div>

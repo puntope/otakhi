@@ -93,7 +93,7 @@ export default function Welcome({ rooms, neighbourhoods, districts, filters, ...
         router.get( '/', { ...query });
     };
 
-    return <Page title="Otakhi.ge - Your room in Georgia" locked={filtersOpen}>
+    return <Page locked={filtersOpen}>
         <div className="relative flex flex-col selection:bg-teal-400 selection:text-white">
             <div>
                 <main>

@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
 
+    protected $fillable = [
+        'conversation_id',
+        'user_id',
+        'message'
+    ];
+
     /**
      * Relación con la conversación asociada.
      */
