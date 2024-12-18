@@ -165,6 +165,10 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
+        if ( $room->user_id !== auth()->id() ) {
+            abort(403, 'You do not have permission to access this resource.');
+        }
+
         $neighbourhoods = Neighbourhood::all()->toArray();
         $building_statuses =  array(
             [ 'id' => 'old', 'name' => 'Old' ],

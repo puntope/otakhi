@@ -103,6 +103,13 @@ class ConversationController extends Controller
      */
     public function show( Conversation $conversation )
     {
+
+        $conversation = $conversation->load( 'room', 'user', 'landlord', 'messages' );
+
+        if ( auth()->id() !== $conversation->user_id && auth()->id() !== $conversation->landlord ) {
+            abort(403, 'You do not have permission to access this resource.');
+        }
+        
         return Inertia::render('Conversation', [
             'conversation' => $conversation->load( 'room', 'user', 'landlord', 'messages' )
         ]);
