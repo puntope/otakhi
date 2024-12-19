@@ -64,11 +64,12 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
                         </header>
                         <div className="flex flex-col gap-4">
                             {conversations.map( conversation => {
-                                const userName = conversation.user.id === user.id ? conversation.landlord.name : conversation.user.name;
+                                const isOthersRoom = conversation.user.id === user.id;
+                                const landlord = isOthersRoom ? conversation.room.user.name : conversation.user.name;
                                 return <Link href={route('conversation.show', conversation)}>
                                         <div className="flex w-full items-center gap-3 pb-3 border-b">
                                             <p className="bold text-black hover:opacity-50">Conversation
-                                                with <strong>{userName}</strong> about a room
+                                                with <strong>{landlord}</strong> about { isOthersRoom ? 'a' : 'your' } room
                                                 in <strong>{conversation.room.address}</strong></p>
                                         </div>
                                     </Link>

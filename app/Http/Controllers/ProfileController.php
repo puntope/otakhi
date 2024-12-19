@@ -26,13 +26,13 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $initiatedConversations = Conversation::where('user_id', $user->id)
-            ->with('room', 'room.user', 'messages')
+            ->with('user', 'room', 'room.user', 'messages')
             ->get();
 
         $receivedConversations = Conversation::whereHas('room', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
-            ->with('user', 'messages', 'room', 'room.user')
+            ->with('user', 'room', 'room.user', 'messages' )
             ->get();
 
         $conversations = $initiatedConversations->merge($receivedConversations);
