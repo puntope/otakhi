@@ -7,7 +7,7 @@ import InputError from "@/Components/InputError.jsx";
 import {useEffect, useRef} from "react";
 
 export default function Conversation( {conversation }) {
-    console.log( conversation );
+
     const room = conversation.room;
     const landlord = conversation.landlord;
     const user = usePage().props.auth.user;

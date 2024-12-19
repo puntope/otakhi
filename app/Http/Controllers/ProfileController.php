@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Conversation;
 use App\Models\Language;
 use App\Models\Nationality;
 use App\Models\Room;
@@ -21,13 +22,29 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+
+        $user = $request->user();
+
+        $initiatedConversations = Conversation::where('user_id', $user->id)
+            ->with('room', 'room.user', 'messages')
+            ->get();
+
+        $receivedConversations = Conversation::whereHas('room', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->with('user', 'messages', 'room', 'room.user')
+            ->get();
+
+        $conversations = $initiatedConversations->merge($receivedConversations);
+
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'nationalities' => Nationality::all(),
             'languages' => Language::all(),
             'rooms' => $request->user()->rooms()->with('images', 'neighbourhood', 'district' )->get(),
-            'conversations' => $request->user()->conversations()->with('room', 'user', 'landlord' )->get()
+            'conversations' => $conversations,
         ]);
     }
 

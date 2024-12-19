@@ -7,7 +7,6 @@ import {getImagePath} from "@/utils.js";
 import Button from "@/Components/Button.jsx";
 
 export default function Edit({ mustVerifyEmail, status, nationalities, languages, rooms, conversations }) {
-
     const user = usePage().props.auth.user;
     return (
         <Page title="Profile" headingTitle="Profile">

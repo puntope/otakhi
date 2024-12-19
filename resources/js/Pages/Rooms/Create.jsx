@@ -76,7 +76,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="size" value="What's the size of the room?"/>
                                 <input
                                     required
-                                    placeholder="10"
                                     onChange={(e) => setData('size', e.target.value)}
                                     type="number" min="1" value={data.size} name="size" step="1"/> m2
 
@@ -146,7 +145,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                             <div className="mt-4">
                                 <InputLabel htmlFor="address" value="Address"/>
                                 <TextInput
-                                    placeholder="Example Street, 123"
                                     id="address"
                                     className="mt-1 block w-full"
                                     value={data.address}
@@ -173,7 +171,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="floor" value="Which floor?"/>
                                 <input
                                     required
-                                    placeholder="20"
                                     onChange={(e) => setData('floor', e.target.value)}
                                     type="number" min="1" value={data.floor} name="floor" step="1"/>
 
@@ -184,7 +181,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="num_bathrooms" value="How many bathrooms?"/>
                                 <input
                                     required
-                                    placeholder="2"
                                     onChange={(e) => setData('num_bathrooms', e.target.value)}
                                     type="number" min="1" value={data.num_bathrooms} name="num_bathrooms" step="1"/>
 
@@ -196,7 +192,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                             value="How many people is living in the apartment?"/>
                                 <input
                                     required
-                                    placeholder="2"
                                     onChange={(e) => setData('num_roommates', e.target.value)}
                                     type="number" min="1" value={data.num_roommates} name="num_roomates" step="1"/>
 
@@ -237,7 +232,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="price" value="What's the monthly rent price?"/>
                                 <input
                                     required
-                                    placeholder="100"
                                     onChange={(e) => setData('price', e.target.value)}
                                     type="number" min="0" value={data.price} name="price" step="1"/> $
                                 <InputError className="mt-2" message={errors.price}/>
@@ -279,7 +273,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                 <InputLabel htmlFor="min_contract_months"
                                             value="How many months the tenant can live in the room?"/>
                                 <input
-                                    placeholder="12"
                                     required
                                     onChange={(e) => setData('min_contract_months', e.target.value)}
                                     type="number" min="1" value={data.min_contract_months} name="min_contract_months"
@@ -293,7 +286,6 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                             value="How many people can live in the room?"/>
                                 <input
                                     required
-                                    placeholder="2"
                                     onChange={(e) => setData('allowed_people', e.target.value)}
                                     type="number" min="1" value={data.allowed_people} name="allowed_people"
                                     step="1"/>
