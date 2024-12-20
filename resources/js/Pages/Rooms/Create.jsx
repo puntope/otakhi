@@ -12,11 +12,11 @@ import {getNeighbourhood} from "@/utils.js";
 
 export default function Create({ room = {}, neighbourhoods, building_statuses, genders }) {
     const user = usePage().props.auth.user;
-
     const [query, setQuery] = useState('')
 
-    const { data, setData, post, setError, errors, processing, recentlySuccessful } =
+    const { data, setData, post, patch, setError, errors, processing, recentlySuccessful } =
         useForm({
+            id: room.id,
             user_id: user.id,
             images: room.images,
             size: room.size || '',
@@ -55,7 +55,11 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
             setError( 'neighbourhood_id', 'This field is required.' )
         }
 
-        post(route('room.store'));
+        if ( room?.id ) {
+            patch(route('room.update'));
+        } else {
+            post(route('room.store'));
+        }
     };
 
     return (
@@ -353,7 +357,8 @@ export default function Create({ room = {}, neighbourhoods, building_statuses, g
                                             onChange={(e) => setData('images', e.target.files)}
                                             className="mt-1 block w-full"
                                         />
-                                        <InputError className="mt-2" message={errors.images}/>
+                                        { errors?.images  && <InputError className="mt-2" message={errors?.images[0]}/> }
+
                                     </div>
                                 </header>
                             </section>

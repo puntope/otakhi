@@ -191,10 +191,46 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoomRequest $request, Room $room)
+    public function update(StoreRoomRequest $request, Room $room)
     {
-        //
+
+        $room = Room::all()->findOrFail( $request->input('id') );
+        $neighbourhoods = Neighbourhood::all()->toArray();
+        $building_statuses =  array(
+            [ 'id' => 'old', 'name' => 'Old' ],
+            [ 'id' => 'new', 'name' => 'New' ],
+            [ 'id' => 'old-renovated', 'name' => 'Old Renovated' ]
+        );
+        $genders =  array(
+            [ 'id' => 'male', 'name' => 'Male' ],
+            [ 'id' => 'female', 'name' => 'Female' ],
+        );
+
+       try {
+           $request->validated();
+       } catch ( \Exception $e ) {
+           return redirect()->back();
+       }
+
+        $room->fill($request->validated());
+
+        if ($request->hasFile('images')) {
+
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('room_images', 'public'); // Guardar en storage/app/public/room_images
+
+                $room->images()->create([
+                    'image_path' => $path,
+                    'is_main' => false,
+                ]);
+            }
+        }
+
+        $room->save();
+
+        return redirect()->route('room.show', [ 'room' => $room ]);
     }
+
 
     /**
      * Remove the specified resource from storage.

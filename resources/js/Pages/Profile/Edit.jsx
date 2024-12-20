@@ -44,12 +44,11 @@ export default function Edit({ mustVerifyEmail, status, nationalities, languages
                                 </Link>
                             )}
 
-                            {rooms.length <= 0 && <div className="text-center">
-                                <p>No rooms found.</p>
+                            {<div className="text-center">
                                 <div className="mt-6 flex items-center justify-center">
                                     <Button onClick={() => {
                                         router.get('/rooms/new')
-                                    }}>Create your first room for free!</Button>
+                                    }}>Create aroom for free!</Button>
                                 </div>
                             </div>}
                         </div>
